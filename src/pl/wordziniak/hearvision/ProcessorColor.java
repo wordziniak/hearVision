@@ -11,15 +11,10 @@ import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
 public class ProcessorColor {
-    // Lower and Upper bounds for range checking in HSV color space
     private Scalar mLowerBound = new Scalar(0);
     private Scalar mUpperBound = new Scalar(0);
-    // Minimum contour area in percent for contours filtering
-//    private static double mMinContourArea = 0.1;
-    // Color radius for range checking in HSV color space
     private Scalar mColorRadius = new Scalar(25,50,50,0);
     private Mat mSpectrum = new Mat();
-//    private List<MatOfPoint> mContours = new ArrayList<MatOfPoint>();
     String[] tableTone = {"C1","D1","E1","F1","G1","A1","H1","C2"};
 
     // Cache
@@ -59,14 +54,6 @@ public class ProcessorColor {
         Imgproc.cvtColor(spectrumHsv, mSpectrum, Imgproc.COLOR_HSV2RGB_FULL, 4);
     }
 
-//    public Mat getSpectrum() {
-//        return mSpectrum;
-//    }
-
-//    public void setMinContourArea(double area) {
-//        mMinContourArea = area;
-//    }
-
     public void process(Mat rgbaImage) {
         Imgproc.pyrDown(rgbaImage, mPyrDownMat);
         Imgproc.pyrDown(mPyrDownMat, mPyrDownMat);
@@ -79,32 +66,8 @@ public class ProcessorColor {
         List<MatOfPoint> contours = new ArrayList<MatOfPoint>();
 
         Imgproc.findContours(mDilatedMask, contours, mHierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
-
-        // Find max contour area
-//        double maxArea = 0;
-//        Iterator<MatOfPoint> each = contours.iterator();
-//        while (each.hasNext()) {
-//            MatOfPoint wrapper = each.next();
-//            double area = Imgproc.contourArea(wrapper);
-//            if (area > maxArea)
-//                maxArea = area;
-//        }
-
-        // Filter contours by area and resize to fit the original image size
-//        mContours.clear();
-//        each = contours.iterator();
-//        while (each.hasNext()) {
-//            MatOfPoint contour = each.next();
-//            if (Imgproc.contourArea(contour) > mMinContourArea*maxArea) {
-//                Core.multiply(contour, new Scalar(4,4), contour);
-//                mContours.add(contour);
-//            }
-//        }
     }
 
-//    public List<MatOfPoint> getContours() {
-//        return mContours;
-//    }
     
     private int compareAll(double red, double green, double blue){
  	   int result=0;

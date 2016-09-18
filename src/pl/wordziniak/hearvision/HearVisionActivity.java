@@ -29,9 +29,6 @@ public class HearVisionActivity extends Activity implements CvCameraViewListener
     private Scalar               mBlobColorRgba;
     private Scalar               mBlobColorHsv;
     private ProcessorColor    mDetector;
-//    private Mat                  mSpectrum;
-//    private Size                 SPECTRUM_SIZE;
-//    private Scalar               CONTOUR_COLOR;
     String[] tableTone = {"C1","D1","E1","F1","G1","A1","H1","C2"};
     private ProcessorAudio procAudio = new ProcessorAudio();
     int i=0;
@@ -46,7 +43,6 @@ public class HearVisionActivity extends Activity implements CvCameraViewListener
                 {
                     Log.i(TAG, "OpenCV loaded successfully");
                     mOpenCvCameraView.enableView();
-//                    mOpenCvCameraView.setOnTouchListener(ColorBlobDetectionActivity.this);
                 } break;
                 default:
                 {
@@ -69,8 +65,7 @@ public class HearVisionActivity extends Activity implements CvCameraViewListener
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-//        mStartStop = (ToggleButton) this.findViewById( R.id.buttonStartStop );
-//        mStartStop.setOnCheckedChangeListener( this );
+
 
         setContentView(R.layout.color_blob_detection_surface_view);
 
@@ -102,11 +97,8 @@ public class HearVisionActivity extends Activity implements CvCameraViewListener
     public void onCameraViewStarted(int width, int height) {
         mRgba = new Mat(height, width, CvType.CV_8UC4);
         mDetector = new ProcessorColor();
-//        mSpectrum = new Mat();
         mBlobColorRgba = new Scalar(255);
         mBlobColorHsv = new Scalar(255);
-//        SPECTRUM_SIZE = new Size(200, 64);
-//        CONTOUR_COLOR = new Scalar(255,0,0,255);
     }
 
     public void onCameraViewStopped() {
@@ -132,15 +124,12 @@ public class HearVisionActivity extends Activity implements CvCameraViewListener
         Mat touchedRegionHsv = new Mat();
         Imgproc.cvtColor(touchedRegionRgba, touchedRegionHsv, Imgproc.COLOR_RGB2HSV_FULL);
 
-        // Calculate average color of touched region
+        // Calculate average color of region
         mBlobColorHsv = Core.sumElems(touchedRegionHsv);
         int pointCount = centerRect.width*centerRect.height;
         for (int i = 0; i < mBlobColorHsv.val.length; i++)
             mBlobColorHsv.val[i] /= pointCount;
         mBlobColorRgba = converScalarHsv2Rgba(mBlobColorHsv);
-
-//        Log.i(TAG, "Touched rgba color: (" + mBlobColorRgba.val[0] + ", " + mBlobColorRgba.val[1] +
-//                ", " + mBlobColorRgba.val[2] + ", " + mBlobColorRgba.val[3] + ")");
 
         mDetector.setHsvColor(mBlobColorHsv);
 
@@ -149,88 +138,19 @@ public class HearVisionActivity extends Activity implements CvCameraViewListener
         touchedRegionRgba.release();
         touchedRegionHsv.release();
         procAudio.setFrequency(mDetector.getColor(mBlobColorRgba));
-//        procAudio.setFrequency(tableTone[i]);
-//      	i=(i+1)%tableTone.length;
     	procAudio.start();
 
         return false; // don't need subsequent touch events
     }
 
-//    public boolean onTouch(View v, MotionEvent event) {
-//        int cols = mRgba.cols();
-//        int rows = mRgba.rows();
-//
-//        int xOffset = (mOpenCvCameraView.getWidth() / 2);
-//        int yOffset = (mOpenCvCameraView.getHeight() / 2);
-//
-//        int x = (int)event.getX() - xOffset;
-//        int y = (int)event.getY() - yOffset;
-//
-//        Log.i(TAG, "Touch image coordinates: (" + x + ", " + y + ")");
-//
-//        if ((x < 0) || (y < 0) || (x > cols) || (y > rows)) return false;
-//
-//        Rect centerRect = new Rect();
-//
-//        centerRect.x = xOffset-25;
-//        centerRect.y = yOffset-25;
-//
-//        centerRect.width = 50;
-//        centerRect.height = 50;
-//
-//        Mat touchedRegionRgba = mRgba.submat(centerRect);
-//
-//        Mat touchedRegionHsv = new Mat();
-//        Imgproc.cvtColor(touchedRegionRgba, touchedRegionHsv, Imgproc.COLOR_RGB2HSV_FULL);
-//
-//        // Calculate average color of touched region
-//        mBlobColorHsv = Core.sumElems(touchedRegionHsv);
-//        int pointCount = centerRect.width*centerRect.height;
-//        for (int i = 0; i < mBlobColorHsv.val.length; i++)
-//            mBlobColorHsv.val[i] /= pointCount;
-//
-//        mBlobColorRgba = converScalarHsv2Rgba(mBlobColorHsv);
-//
-//        Log.i(TAG, "Touched rgba color: (" + mBlobColorRgba.val[0] + ", " + mBlobColorRgba.val[1] +
-//                ", " + mBlobColorRgba.val[2] + ", " + mBlobColorRgba.val[3] + ")");
-//
-//        mDetector.setHsvColor(mBlobColorHsv);
-//
-////        Imgproc.resize(mDetector.getSpectrum(), mSpectrum, SPECTRUM_SIZE);
-//
-//        mIsColorSelected = true;
-//
-//        touchedRegionRgba.release();
-//        touchedRegionHsv.release();
-//        
-//        procAudio.setFrequency(tableTone[i]);
-//      	i=(i+1)%tableTone.length;
-//    	procAudio.start();
-////        try {
-////     	   Thread.sleep(1000);
-////        } catch (InterruptedException e) {
-////     	   // TODO Auto-generated catch block
-////		   	e.printStackTrace();
-////        }
-////        	procAudio.pause();
-//
-//        return setColor(); // don't need subsequent touch events
-//    }
 
     public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
         mRgba = inputFrame.rgba();
 
         if (mIsColorSelected) {
             mDetector.process(mRgba);
-//            List<MatOfPoint> contours = mDetector.getContours();
-//            Log.e(TAG, "Contours count: " + contours.size());
-//            Imgproc.drawContours(mRgba, contours, -1, CONTOUR_COLOR);
-
             Mat colorLabel = mRgba.submat(4, 68, 4, 68);
             colorLabel.setTo(mBlobColorRgba);
-//
-//            Mat spectrumLabel = mRgba.submat(4, 4 + mSpectrum.rows(), 70, 70 + mSpectrum.cols());
-//            mSpectrum.copyTo(spectrumLabel);
         }
         setColor();
 

@@ -8,15 +8,11 @@ import android.media.AudioTrack;
 
 public class ProcessorAudio
 {
-   /*
-    * PRIVATE DATA
-    */
-	HashMap<String, Double> cDur=new HashMap<String, Double>();
 
+	HashMap<String, Double> cDur=new HashMap<String, Double>();
 	private AudioTrack mAudio;
 	private int mSampleCount;
- 
-	// some constants
+	// constants
 	private final int sampleRate = 44100;
 	private final int minFrequency = 200;
 	private final int bufferSize = sampleRate / minFrequency;
