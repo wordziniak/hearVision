@@ -49,11 +49,11 @@ Poprawne działanie aplikacji oraz jej implementacja zgodna z zasadami Programow
 
 Podstawowy obieg informacji w aplikacji przedstawia rysunek [fig:projekt aplikacji]. Jak łatwo zauważyć program wykonuje kolejno cztery działania: (1) pobranie zdjęcia z kamery głównej telefonu; (2) przesłanie rysunku do obiektu ProcessorColor w celu analizy; (3) odebranie informacji dotyczącej koloru centralnej części obrazu; (4) przesłanie informacji o kolorze do modułu ProcessorAudio generującego odpowiedni dźwięk. Implementacja modułów została opisana poniżej.
 
-![Projekt obiegu informacji w aplikacji](projectHV.png "fig:") [fig:projekt aplikacji]
+![Projekt obiegu informacji w aplikacji](images/projectHV.png "fig:") [fig:projekt aplikacji]
 
 Istotna jest stałość kolorów oraz dźwięków - tak, żeby konkretne kolory odpowiadały konkretnym, niezmiennym dźwiękom. Aby uniknąć kakofonii, moduł ProcessorAudio ma zaimplementowaną tablicę zawierającą dźwięki gamy C-dur oraz odpowiadające im częstotliwości [fig:cdur]. Główna pętla przesyła informacja z kamery do modułu rozpoznającego kolor, natomiast informacje o kolorze do modułu odpowiedzialnego za generowanie dźwięku.
 
-![Dominujący kolor a dźwięk gamy C-dur](cdur.png "fig:") [fig:cdur]
+![Dominujący kolor a dźwięk gamy C-dur](images/cdur.png "fig:") [fig:cdur]
 
 ### Uśrednianie koloru
 
@@ -61,7 +61,7 @@ W aplikacji wykorzystano fragmenty kodu SampleCV-Color Blob Detection oraz stand
 
 Na rysunku [fig:okno aplikacji] przedstawiono widok okna aplikacji. W lewym górnym rogu zaprezentowany jest uśredniony kolor centralnej części widoku z kamery. W centralnej części widać obszar pikseli branych pod uwagę przy uśrednianiu koloru.
 
-![Wygląd okna aplikacji](analize.png "fig:") [fig:okno aplikacji]
+![Wygląd okna aplikacji](images/analize.png "fig:") [fig:okno aplikacji]
 
 Drugą interesującą kwestią jest algorytm wyboru uśrednionego koloru, jaki znajduje się w interesującym nas obszarze. Jest to istotne dlatego, że odpowiedni kolor ma przyporządkowany stały dźwięk w klasie ProcessorAudio. Jak łatwo zauważyć w listing’u 1, do prawidłowego wytypowania jednego z siedmiu kolorów (czerwonego, zielonego, niebieskiego, żółtego, cyjanowego, magenty oraz szarości - którym odpowiadają tony dźwięków) również wykorzystano standard RGB.
 
@@ -87,7 +87,7 @@ private int compareAll(double red, double green, double blue){
 
 Do kolejnych komórek tabeli ,,comp” zostają zapisane różnice między natężeniem poszczególnych kolorów. Następnie wykonana zostaje pętla sprawdzająca w której komórce wartość jest największa - numer tej komórki wskazuje, który kolor dominuje w interesującym nas fragmencie obrazu. Stany poszczególnych komórek tabeli ,,comp” na dwóch przykładach obrazuje rysunek [fig:tabprzyklad] - dodatkowo, bordową ramką zaznaczono na nim numer zwróconej w funkcji komórki.
 
-![Przykłady stanów tabeli przy pracy algorytmu compareAll wraz z zaznaczoną komórką zwracaną przez ten algorytm](tabprzyklad.png "fig:") [fig:tabprzyklad]
+![Przykłady stanów tabeli przy pracy algorytmu compareAll wraz z zaznaczoną komórką zwracaną przez ten algorytm](images/tabprzyklad.png "fig:") [fig:tabprzyklad]
 
 ### Generowanie dźwięku
 
